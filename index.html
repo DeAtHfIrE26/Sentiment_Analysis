@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KARY Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #007BFF;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 95%;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            padding: 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .dark-mode-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chatbox {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            max-width: 80%;
+        }
+
+        .message .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .message .content {
+            padding: 12px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .message .timestamp {
+            font-size: 0.7em;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .user {
+            align-self: flex-end;
+        }
+
+        .user .content {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .bot .content {
+            background-color: #F1F1F1;
+            color: black;
+        }
+
+        .typing-indicator {
+            display: flex;
+            padding: 10px;
+            background-color: #F1F1F1;
+            border-radius: 18px;
+            width: fit-content;
+        }
+
+        .typing-indicator span {
+            height: 10px;
+            width: 10px;
+            background-color: #666;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1s infinite;
+        }
+
+        @keyframes typing {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+
+        .input-box {
+            display: flex;
+            border-top: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .input-box textarea {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            resize: none;
+            font-family: inherit;
+        }
+
+        .input-box button {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 20px;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .input-box button:hover {
+            background-color: #45a049;
+        }
+
+        .input-box .microphone-button {
+            background-color: #FF5722;
+        }
+
+        .input-box .microphone-button.recording {
+            animation: recordingAnimation 1s infinite;
+        }
+
+        @keyframes recordingAnimation {
+            0% { background-color: #FF5722; }
+            50% { background-color: #FF8A50; }
+            100% { background-color: #FF5722; }
+        }
+
+        .suggestions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            border-top: 1px solid #ccc;
+        }
+
+        .suggestion {
+            background-color: #f0f0f0;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .suggestion:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .suggestion.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .suggestion i {
+            margin-right: 5px;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            --background-color: #222;
+            --text-color: #f5f5f5;
+        }
+
+        body.dark-mode .container {
+            background-color: #333;
+        }
+
+        body.dark-mode .bot .content {
+            background-color: #444;
+            color: #f5f5f5;
+        }
+
+        body.dark-mode .input-box textarea {
+            background-color: #444;
+            color: #f5f5f5;
+            border-color: #555;
+        }
+
+        body.dark-mode .suggestion {
+            background-color: #444;
+            color: #f5f5f5;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>KARY Chatbot</h1>
+            <p>Hello Kashyap,</p>
+            <p>How can I assist you today?</p>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+        <div class="chatbox" id="chatbox"></div>
+        <div class="input-box">
+            <textarea id="user-input" placeholder="Enter a prompt here" rows="1" oninput="autoResize(this)"></textarea>
+            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            <button id="microphone-button" class="microphone-button" onclick="sendVoiceMessage()"><i class="fas fa-microphone"></i></button>
+        </div>
+        <div class="suggestions-container" id="suggestions-container"></div>
+    </div>
+
+    <script>
+        let suggestions = [
+            { text: "This software is very user-friendly", icon: "fas fa-pen" },
+            { text: "I am not impressed with the new features", icon: "fas fa-book" },
+            { text: "I am indifferent to the election results", icon: "fas fa-phone" },
+            { text: "I am experiencing issues with this app", icon: "fas fa-user-circle"},
+            { text: "I find this topic boring", icon: "fas fa-laptop" }
+        ];
+
+        function displaySuggestions() {
+            const suggestionsContainer = document.getElementById('suggestions-container');
+            suggestionsContainer.innerHTML = '';
+
+            suggestions.forEach(suggestion => {
+                const suggestionElement = document.createElement('div');
+                suggestionElement.classList.add('suggestion');
+                suggestionElement.innerHTML = `<i class="${suggestion.icon}"></i> ${suggestion.text}`;
+                suggestionElement.addEventListener('click', () => {
+                    sendMessage(suggestion.text);
+                    const selectedSuggestion = document.querySelector('.suggestion.selected');
+                    if (selectedSuggestion) {
+                        selectedSuggestion.classList.remove('selected');
+                    }
+                    suggestionElement.classList.add('selected');
+                });
+                suggestionsContainer.appendChild(suggestionElement);
+            });
+        }
+
+        displaySuggestions();
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const darkModeToggle = document.querySelector('.dark-mode-toggle i');
+            darkModeToggle.classList.toggle('fa-moon');
+            darkModeToggle.classList.toggle('fa-sun');
+        }
+
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        function sendMessage(userInput = document.getElementById('user-input').value.trim()) {
+            if (userInput === '') return;
+
+            appendMessage('user', userInput);
+            document.getElementById('user-input').value = '';
+            autoResize(document.getElementById('user-input'));
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Send message to the backend
+            fetch('/get_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                removeTypingIndicator();
+                appendMessage('bot', generateBotResponse(data));
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                removeTypingIndicator();
+                appendMessage('bot', 'Sorry, there was an error processing your request.');
+            });
+        }
+
+        function sendVoiceMessage() {
+            const microphoneButton = document.getElementById('microphone-button');
+            microphoneButton.classList.add('recording');
+
+            fetch('/voice_input', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                microphoneButton.classList.remove('recording');
+
+                if (data.error) {
+                    appendMessage('bot', data.error);
+                    return;
+                }
+
+                appendMessage('user', data.message);
+                appendMessage('bot', generateBotResponse(data));
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                microphoneButton.classList.remove('recording');
+                appendMessage('bot', 'Sorry, there was an error processing your voice input.');
+            });
+        }
+
+        function generateBotResponse(data) {
+            if (data.sentiment === 'positive') {
+                return "I'm glad to hear that! Your message seems positive.";
+            } else if (data.sentiment === 'negative') {
+                return "I'm sorry to hear that. Your message seems negative.";
+            } else {
+                return "Thank you for sharing that information. Your message seems neutral.";
+            }
+        }
+
+        function appendMessage(sender, content) {
+            const chatbox = document.getElementById('chatbox');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+
+            const avatar = document.createElement('div');
+            avatar.classList.add('avatar');
+            avatar.textContent = sender === 'user' ? 'K' : 'B';
+
+            const messageContent = document.createElement('div');
+            messageContent.classList.add('content');
+            messageContent.textContent = content;
+
+            const timestamp = document.createElement('div');
+            timestamp.classList.add('timestamp');
+            timestamp.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            messageContent.appendChild(timestamp);
+
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const chatbox = document.getElementById('chatbox');
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('message', 'bot', 'typing-indicator');
+            typingDiv.innerHTML = '<span></span><span></span><span></span>';
+            chatbox.appendChild(typingDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typingIndicator = document.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+    </script>
+</body>
+</html>
