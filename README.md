@@ -4,7 +4,7 @@
 
 <img width="2000rem" src="https://raw.githubusercontent.com/SamirPaulb/SamirPaulb/main/assets/rainbow-superthin.webp"><br>
 
-  ![KARY Logo](https://placeholder-for-3d-animated-logo.com/kary-logo.gif)
+  ![KARY Logo](![logo](https://github.com/user-attachments/assets/a0f94586-7a01-4beb-8cab-825a01c58e77))
   
   ![Project Screenshot](https://github.com/user-attachments/assets/664c9dba-2b54-43f3-88de-da3090d583c5)
   
@@ -101,9 +101,12 @@ Visit http://localhost:5000 in your browser to interact with KARY.
 ```
 <img width="2000rem" src="https://raw.githubusercontent.com/SamirPaulb/SamirPaulb/main/assets/rainbow-superthin.webp"><br>
 
+
 📊 Project Architecture
 <div align="center">
+![System](https://github.com/user-attachments/assets/51cb4f7c-22ce-422b-af1e-da871745739d)
 </div>
+
 
 
     Input Processing: Advanced NLP techniques for text and speech input
@@ -116,7 +119,7 @@ Visit http://localhost:5000 in your browser to interact with KARY.
 
 🖼️ Screenshots
 
-![Demonstration-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/0046e45d-da0a-4465-acd1-112d3e564a95)
+![ScreenRecording2024-09-240110501-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/5d2d0381-acae-499b-aedd-1de3c25c68f6)
 
 
 <img width="2000rem" src="https://raw.githubusercontent.com/SamirPaulb/SamirPaulb/main/assets/rainbow-superthin.webp"><br>
